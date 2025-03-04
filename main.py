@@ -1,14 +1,11 @@
-from telegram import Update
-from telegram.ext import Application, CommandHandler
+from telegram.ext import Application, CommandHandler, ContextTypes
 
-import os
-
-# Get API key from environment variables or secrets
-API_KEY = os.environ.get('TELEGRAM_BOT_API_KEY', 'your_telegram_bot_api_key')
+# Замените на свой токен API, который вы получили от BotFather
+API_KEY = '8160940951:AAHJh1V2oTrXrnD-dezCR1Zp27ktAaU5X3Y'
 
 # Функция, которая будет вызываться при отправке команды /start
-async def start(update: Update, context):
-    await update.message.reply_text("Привет! Добро пожаловать в наш бот! Как я могу помочь?")
+async def start(update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Привет! С помощью этого бота можно внести информацию о рейсах!")
 
 def main():
     # Инициализация бота с твоим API-ключом
