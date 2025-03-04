@@ -1,8 +1,10 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler
 
-# Замените на свой токен API, который вы получили от BotFather
-API_KEY = 'your_telegram_bot_api_key'
+import os
+
+# Get API key from environment variables or secrets
+API_KEY = os.environ.get('TELEGRAM_BOT_API_KEY', 'your_telegram_bot_api_key')
 
 # Функция, которая будет вызываться при отправке команды /start
 async def start(update: Update, context):
