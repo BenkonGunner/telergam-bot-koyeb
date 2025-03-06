@@ -4,6 +4,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from flask import Flask
 import threading
+import time
 
 # Загрузка переменных окружения
 load_dotenv()
@@ -15,9 +16,10 @@ def home():
     return "OK"
 
 def run_flask():
+    print("Flask сервер запущен на http://0.0.0.0:8000")
     app.run(host="0.0.0.0", port=8000)
 
-# Запускаем Flask в отдельном потоке
+# Запуск Flask в отдельном потоке
 threading.Thread(target=run_flask, daemon=True).start()
 
 # Твой API-ключ от BotFather
@@ -69,5 +71,7 @@ def main():
     application.run_polling()
 
 if __name__ == '__main__':
+    print("Запуск приложения")
     # Запускаем Telegram-бота и Flask в отдельных потоках
     threading.Thread(target=main, daemon=True).start()
+    time.sleep(10)  # Убедись, что Flask успевает запуститься
