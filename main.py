@@ -1,13 +1,18 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from telegram.ext import Application, CommandHandler, ContextTypes
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from flask import Flask
 import threading
 
 # 🔑 Твой API-ключ от BotFather
-API_KEY = '8160940951:AAHJh1V2oTrXrnD-dezCR1Zp27ktAaU5X3Y'
+API_KEY = os.getenv("BOT_TOKEN")
 
 # 🔒 ID группы, в которой бот разрешен (замени на ID своей группы)
-ALLOWED_GROUP_ID = -1002402335152  # Укажи реальный ID группы
+GROUP_ID = int(os.getenv("GROUP_ID"))  # Укажи реальный ID группы
 
 # 📌 Ссылка на форму Airtable (замени на свою ссылку)
 form_url = "https://airtable.com/app20FIZVkuqrfYCG/pagi3f25jJR4rmWeg/form"
