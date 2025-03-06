@@ -1,12 +1,12 @@
 import os
 from dotenv import load_dotenv
-
-load_dotenv()
-
 from telegram.ext import Application, CommandHandler, ContextTypes
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from flask import Flask
 import threading
+
+# Загрузка переменных окружения
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -17,18 +17,19 @@ def home():
 def run_flask():
     app.run(host="0.0.0.0", port=8000)
 
+# Запускаем Flask в отдельном потоке
 threading.Thread(target=run_flask, daemon=True).start()
 
-# 🔑 Твой API-ключ от BotFather
+# Твой API-ключ от BotFather
 API_KEY = os.getenv("BOT_TOKEN")
 
-# 🔒 ID группы, в которой бот разрешен (замени на ID своей группы)
-GROUP_ID = int(os.getenv("GROUP_ID"))  # Укажи реальный ID группы
+# ID группы, в которой бот разрешен
+GROUP_ID = int(os.getenv("GROUP_ID"))
 
-# 📌 Ссылка на форму Airtable (замени на свою ссылку)
+# Ссылка на форму Airtable
 form_url = "https://airtable.com/app20FIZVkuqrfYCG/pagi3f25jJR4rmWeg/form"
 
-# 📩 Команда /start
+# Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat = update.effective_chat
     if not chat:
@@ -40,7 +41,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     print(f"📌 Бот получил команду в чате {chat_id} (тип: {chat_type})")
 
-    # Проверяем, является ли чат группой
     if chat_type in ["group", "supergroup"]:
         if chat_id == GROUP_ID:
             print("✅ Доступ разрешён!")
@@ -55,7 +55,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             print(f"🚫 Доступ запрещён! (Чат ID: {chat_id} не совпадает с {GROUP_ID})")
             await context.bot.send_message(chat_id=chat_id, text="❌ У вас нет доступа к этому боту.")
-
     else:
         print(f"🚫 Бот получил команду в ЛИЧНОМ чате (ID: {chat_id}). ОТКАЗАНО!")
         await context.bot.send_message(chat_id=chat_id, text="❌ Используйте бота только в группе!")
@@ -63,9 +62,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def main():
     application = Application.builder().token(API_KEY).build()
 
+    # Добавляем обработчик команды /start
     application.add_handler(CommandHandler("start", start))
 
+    # Запуск polling
     application.run_polling()
 
 if __name__ == '__main__':
-    main()
+    # Запускаем Telegram-бота и Flask в отдельных потоках
+    threading.Thread(target=main, daemon=True).start()
