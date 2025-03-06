@@ -17,7 +17,7 @@ def home():
 
 def run_flask():
     print("Flask сервер запущен на http://0.0.0.0:8000")
-    app.run(host="0.0.0.0", port=8000)
+    app.run(host="0.0.0.0", port=8000, use_reloader=False)  # Убираем reloader для работы на Koyeb
 
 # Запуск Flask в отдельном потоке
 threading.Thread(target=run_flask, daemon=True).start()
