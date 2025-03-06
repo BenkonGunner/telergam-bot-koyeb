@@ -5,6 +5,19 @@ load_dotenv()
 
 from telegram.ext import Application, CommandHandler, ContextTypes
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from flask import Flask
+import threading
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "OK"
+
+def run_flask():
+    app.run(host="0.0.0.0", port=8000)
+
+threading.Thread(target=run_flask, daemon=True).start()
 
 # 🔑 Твой API-ключ от BotFather
 API_KEY = os.getenv("BOT_TOKEN")
