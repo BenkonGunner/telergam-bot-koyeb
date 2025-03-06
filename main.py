@@ -5,8 +5,6 @@ load_dotenv()
 
 from telegram.ext import Application, CommandHandler, ContextTypes
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from flask import Flask
-import threading
 
 # 🔑 Твой API-ключ от BotFather
 API_KEY = os.getenv("BOT_TOKEN")
@@ -66,15 +64,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return "Бот работает!"
-
-def run_flask():
-    app.run(host="0.0.0.0", port=8000)
-
-# Запускаем Flask-сервер в отдельном потоке
-threading.Thread(target=run_flask, daemon=True).start()
