@@ -1,7 +1,8 @@
 import os
 from dotenv import load_dotenv
+from telegram import Bot, Update
 from telegram.ext import Application, CommandHandler, ContextTypes
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 # Загружаем переменные окружения
 load_dotenv()
@@ -10,7 +11,13 @@ load_dotenv()
 API_KEY = os.getenv("BOT_TOKEN")
 GROUP_ID = int(os.getenv("GROUP_ID"))
 form_url = "https://airtable.com/app20FIZVkuqrfYCG/pagi3f25jJR4rmWeg/form"
+webhook_url = "certain-ardelis-novagroup-1a591a04.koyeb.app/"  # замените на свой URL из Koyeb
 
+# Устанавливаем webhook
+bot = Bot(token=API_KEY)
+bot.set_webhook(url=webhook_url)
+
+# 📌 Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat = update.effective_chat
     if not chat:
@@ -18,10 +25,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     chat_id = chat.id
-    chat_type = chat.type
+    chat_type = chat.type  # Тип чата (group, supergroup, private)
 
     print(f"📌 Бот получил команду в чате {chat_id} (тип: {chat_type})")
 
+    # Проверяем, является ли чат группой
     if chat_type in ["group", "supergroup"]:
         if chat_id == GROUP_ID:
             print("✅ Доступ разрешён!")
@@ -45,8 +53,8 @@ def main():
     application = Application.builder().token(API_KEY).build()
     application.add_handler(CommandHandler("start", start))
 
-    # Запускаем polling
-    application.run_polling()
+    # Запускаем webhook для получения обновлений
+    application.run_webhook(listen="0.0.0.0", port=443, url_path='YOUR_URL')
 
 if __name__ == '__main__':
     main()
