@@ -64,7 +64,6 @@ def main():
     application = Application.builder().token(API_KEY).build()
 
     application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("get_id", get_id))
 
     application.run_polling()
 
