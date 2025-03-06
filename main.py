@@ -2,36 +2,15 @@ import os
 from dotenv import load_dotenv
 from telegram.ext import Application, CommandHandler, ContextTypes
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from flask import Flask
-import threading
-import asyncio
 
-# Загрузка переменных окружения
+# Загружаем переменные окружения
 load_dotenv()
 
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return "OK"
-
-def run_flask():
-    print("Flask сервер запущен на http://0.0.0.0:8000")
-    app.run(host="0.0.0.0", port=8000, use_reloader=False)  # Убираем reloader для работы на Koyeb
-
-# Запуск Flask в отдельном потоке
-threading.Thread(target=run_flask, daemon=True).start()
-
-# Твой API-ключ от BotFather
+# Инициализация бота
 API_KEY = os.getenv("BOT_TOKEN")
-
-# ID группы, в которой бот разрешен
 GROUP_ID = int(os.getenv("GROUP_ID"))
-
-# Ссылка на форму Airtable
 form_url = "https://airtable.com/app20FIZVkuqrfYCG/pagi3f25jJR4rmWeg/form"
 
-# Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat = update.effective_chat
     if not chat:
@@ -39,7 +18,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     chat_id = chat.id
-    chat_type = chat.type  # Тип чата (group, supergroup, private)
+    chat_type = chat.type
 
     print(f"📌 Бот получил команду в чате {chat_id} (тип: {chat_type})")
 
@@ -62,15 +41,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_message(chat_id=chat_id, text="❌ Используйте бота только в группе!")
 
 def main():
+    # Создаем приложение для бота
     application = Application.builder().token(API_KEY).build()
-
-    # Добавляем обработчик команды /start
     application.add_handler(CommandHandler("start", start))
 
-    # Запуск polling в асинхронном режиме
-    asyncio.run(application.run_polling())
+    # Запускаем polling
+    application.run_polling()
 
 if __name__ == '__main__':
-    print("Запуск приложения")
-    # Запускаем Telegram-бота и Flask в отдельных потоках
-    threading.Thread(target=main, daemon=True).start()
+    main()
