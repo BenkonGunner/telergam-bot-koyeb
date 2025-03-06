@@ -42,7 +42,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Проверяем, является ли чат группой
     if chat_type in ["group", "supergroup"]:
-        if chat_id == ALLOWED_GROUP_ID:
+        if chat_id == GROUP_ID:
             print("✅ Доступ разрешён!")
             keyboard = [[InlineKeyboardButton("Заполнить форму о рейсе", url=form_url)]]
             reply_markup = InlineKeyboardMarkup(keyboard)
@@ -53,19 +53,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 reply_markup=reply_markup
             )
         else:
-            print(f"🚫 Доступ запрещён! (Чат ID: {chat_id} не совпадает с {ALLOWED_GROUP_ID})")
+            print(f"🚫 Доступ запрещён! (Чат ID: {chat_id} не совпадает с {GROUP_ID})")
             await context.bot.send_message(chat_id=chat_id, text="❌ У вас нет доступа к этому боту.")
 
     else:
         print(f"🚫 Бот получил команду в ЛИЧНОМ чате (ID: {chat_id}). ОТКАЗАНО!")
         await context.bot.send_message(chat_id=chat_id, text="❌ Используйте бота только в группе!")
-
-# 📌 Команда /get_id (проверяем, какой ID бот видит)
-async def get_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat = update.effective_chat
-    if chat:
-        await context.bot.send_message(chat_id=chat.id, text=f"📌 ID этой группы: {chat.id}")
-        print(f"✅ Получен ID группы: {chat.id}")  # Лог в консоль Replit
 
 def main():
     application = Application.builder().token(API_KEY).build()
