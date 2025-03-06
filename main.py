@@ -4,7 +4,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from flask import Flask
 import threading
-import time
+import asyncio
 
 # Загрузка переменных окружения
 load_dotenv()
@@ -67,11 +67,10 @@ def main():
     # Добавляем обработчик команды /start
     application.add_handler(CommandHandler("start", start))
 
-    # Запуск polling
-    application.run_polling()
+    # Запуск polling в асинхронном режиме
+    asyncio.run(application.run_polling())
 
 if __name__ == '__main__':
     print("Запуск приложения")
     # Запускаем Telegram-бота и Flask в отдельных потоках
     threading.Thread(target=main, daemon=True).start()
-    time.sleep(10)  # Убедись, что Flask успевает запуститься
